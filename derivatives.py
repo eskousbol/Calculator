@@ -1,5 +1,5 @@
 #calculate simple first order derivatives
-sample_fcn = "x^2+x"
+sample_fcn = "3x^5+6x+5"
 #NO spaces should be present in fnctn fed to program
 def split_into_terms(fnctn):
     #returns list of all the terms and the operands that seperate them
@@ -9,6 +9,8 @@ def split_into_terms(fnctn):
     for i in range(len(fnctn)):
         #iterate through function given, every time there is a + or -
         #creat a new term
+        if fnctn[i] == chr(32):
+            return(-1,-1)
         if fnctn[i] != '+' and fnctn[i] != '-':
             current_term.append(fnctn[i])
         else:
@@ -19,8 +21,24 @@ def split_into_terms(fnctn):
             terms.append(current_term)
     return terms, operations
 
+def determine_type(term):
+    #determine the type of the term, whether it is a trigonometric function, exponential,
+    #a simple polynomial, logarithmic etc.
+    pass
+
+def polynomial_deriv(term):
+    #intend to move differentiation of a polynomial term here
+    pass
+
 def first_order_deriv(fnctn):
     terms, operations = split_into_terms(fnctn)
+    if terms == -1 and operations == -1:
+        #xhexks to see if there are any spaces in terms
+        print("This is not a valid function! Please include no spaces when typing.")
+        return None
+    if 'x' not in terms[len(terms)-1]:
+        #drops constant calue immediately
+        terms = terms[0:len(terms)-1]
     answer = ""
     for i in range(len(terms)):
         #getting derivative of each term
@@ -45,10 +63,20 @@ def first_order_deriv(fnctn):
             #in case exponent is not written in
             exponent = "1"
         #this is the derivative of the term
-        answer = answer + (str(int(exponent) * int(coefficient))+ "x^" + str(int(exponent)-1))
+        if int(exponent) > 1:
+            answer = answer + (str(int(exponent) * int(coefficient))+ "x^" + str(int(exponent)-1))
+        else:
+            answer = answer + (str(int(exponent) * int(coefficient)))
         if i != len(terms) - 1:
             #if it is not the last term, add an operand before moving to the next one
             answer += operations[i]
     return answer
 
-print(first_order_deriv(sample_fcn))
+def multi_order_deriv(ord_deriv, fnctn):
+    i = 0
+    while i < ord_deriv:
+        fnctn = first_order_deriv(fnctn)
+        i+=1
+    return fnctn
+
+print(multi_order_deriv(2,sample_fcn))
